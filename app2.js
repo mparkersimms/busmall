@@ -100,7 +100,7 @@ function renderImages(leftProductImage, centerProductImage, rightProductImage) {
 var randomProducts = generateRandomImage();
 renderImages(randomProducts[0],randomProducts[1],randomProducts[2]);
 
-var numberOfRounds = 5;
+var numberOfRounds = 25;
 var numberOfClicks = 0 ;
 var buttonShows = document.getElementById('button');
 var h2Element = document.getElementById('h2');
