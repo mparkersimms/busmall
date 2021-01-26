@@ -86,19 +86,40 @@ function generateRandomImage(){
   return [leftProductImage, centerProductImage, rightProductImage];
 }
 
-function renderImages(leftProductImage, centerProductImage, rightProductImage) {
-  leftImage.src = leftProductImage.image;
-  leftProductImage.timesShown++;
+function renderImages() {
+  var currentlyRenderedImages = [leftImage.name, centerImage.name, rightImage.name];
+  var newImages = generateRandomImage();
+  while (
+    currentlyRenderedImages[0] === newImages[0].name ||
+    currentlyRenderedImages[1] === newImages[0].name ||
+    currentlyRenderedImages[2] === newImages[0].name ||
+    currentlyRenderedImages[0] === newImages[1].name ||
+    currentlyRenderedImages[1] === newImages[1].name ||
+    currentlyRenderedImages[2] === newImages[1].name ||
+    currentlyRenderedImages[0] === newImages[2].name ||
+    currentlyRenderedImages[1] === newImages[2].name ||
+    currentlyRenderedImages[2] === newImages[2].name
 
-  centerImage.src = centerProductImage.image;
-  centerProductImage.timesShown++;
+  ){
+    newImages = generateRandomImage();
+  }
 
-  rightImage.src = rightProductImage.image;
-  rightProductImage.timesShown++;
+  leftImage.src = newImages[0].image;
+  leftImage.name = newImages[0].name;
+  newImages[0].timesShown++;
+
+  centerImage.src = newImages[1].image;
+  leftImage.name = newImages[1].name;
+  newImages[1].timesShown++;
+
+  rightImage.src = newImages[2].image;
+  leftImage.name = newImages[2].name;
+  newImages[2].timesShown++;
 }
 
 var randomProducts = generateRandomImage();
 renderImages(randomProducts[0],randomProducts[1],randomProducts[2]);
+
 
 var numberOfRounds = 25;
 var numberOfClicks = 0 ;
@@ -127,7 +148,8 @@ imageContainer.addEventListener('click', function (event){
     return buttonShows;
 
   }});
-
+var totalOfTimesClicked = [];
+var totalOfTimesShown = [];
 var resultsContainer = document.getElementById('results');
 buttonShows.addEventListener('click', function (event){
   console.log(event.target);
@@ -145,8 +167,133 @@ buttonShows.addEventListener('click', function (event){
     resultsSection.appendChild(resultsDataBox);
     resultsDataBox.appendChild(resultsList);
 
-    resultsList.textContent = productNames[i] + ' had ' + ProductImage.imageIndex[i].timesClicked + ' votes, and was seen " + ProductImage.imageIndex[i].timesShown + " times.';
+    resultsList.textContent = productNames[i] + ' had ' + ProductImage.imageIndex[i].timesClicked + ' votes, and was seen ' + ProductImage.imageIndex[i].timesShown + ' times.';
 
   }
 
+  for (var j = 0; j < ProductImage.imageIndex.length; j++){
+    totalOfTimesClicked.push(ProductImage.imageIndex[j].timesClicked);
+  }
+  for (var k = 0; k < ProductImage.imageIndex.length; k++){
+    totalOfTimesShown.push(ProductImage.imageIndex[k].timesShown);
+  }
+  var ctx = document.getElementById('myChart').getContext('2d');
+  var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: productNames,
+      datasets: [{
+        label: 'Times Clicked',
+        data: totalOfTimesClicked,
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(255, 159, 64, 0.2)',
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(255, 159, 64, 0.2)',
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(255, 159, 64, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(255, 159, 64, 0.2)'
+        ],
+        borderColor: [
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)',
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)',
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)'
+        ],
+        borderWidth: 1
+      },{
+        label: 'Times Shown',
+        data: totalOfTimesShown,
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.7)',
+          'rgba(54, 162, 235, 0.7)',
+          'rgba(255, 206, 86, 0.7)',
+          'rgba(75, 192, 192, 0.7)',
+          'rgba(153, 102, 255, 0.7)',
+          'rgba(255, 159, 64, 0.7)',
+          'rgba(255, 99, 132, 0.7)',
+          'rgba(54, 162, 235, 0.7)',
+          'rgba(255, 206, 86, 0.7)',
+          'rgba(75, 192, 192, 0.7)',
+          'rgba(153, 102, 255, 0.7)',
+          'rgba(255, 159, 64, 0.7)',
+          'rgba(255, 99, 132, 0.7)',
+          'rgba(54, 162, 235, 0.7)',
+          'rgba(255, 206, 86, 0.7)',
+          'rgba(75, 192, 192, 0.7)',
+          'rgba(153, 102, 255, 0.7)',
+          'rgba(255, 159, 64, 0.7)',
+          'rgba(153, 102, 255, 0.7)',
+          'rgba(255, 159, 64, 0.7)'
+        ],
+        borderColor: [
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)',
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)',
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)'
+        ],
+        borderWidth: 1
+      }
+    
+    ]
+  },
+  options: {
+      scales: {
+          yAxes: [{
+              ticks: {
+                  beginAtZero: true
+              }
+          }]
+      }
+  }
+  });
 });
+
+
+
+console.log(totalOfTimesClicked);
